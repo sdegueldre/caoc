@@ -61,3 +61,17 @@ char* string_to_cstr(string str) {
   cstr[str.length] = '\0';
   return cstr;
 }
+
+string file_to_string(char* fname) {
+  FILE* input = fopen(fname, "r");
+
+  fseek(input, 0, SEEK_END);
+  long fsize = ftell(input);
+  fseek(input, 0, SEEK_SET);
+
+  string ret = { .length = fsize, .chars = malloc(fsize)};
+  fread(ret.chars, fsize, 1, input);
+  fclose(input);
+
+  return ret;
+}
