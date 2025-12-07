@@ -3,7 +3,7 @@
 #include "../../utils.c"
 
 int main() {
-    // string input = file_to_string("./puzzle-1.test");
+    // string input = file_to_string("./puzzle-2.test");
     string input = file_to_string("./input");
 
     array lines = str_split(input, '\n');
@@ -21,20 +21,25 @@ int main() {
     unsigned long joltage = 0;
     for (int i = 0; i < banks.length; i++) {
         array bank = *((array**)banks.els)[i];
-        int digits[2] = {0};
+        int digits[12] = {0};
         for (int j = 0; j < bank.length; j++) {
             int digit = ((int*)bank.els)[j];
-            if (digit > digits[0] && j <= bank.length - 2) {
-                digits[0] = digit;
-                digits[1] = 0;
-            } else if (digit > digits[1]) {
-                digits[1] = digit;
+            for (int k = 0; k < 12; k++) {
+                if (digit > digits[k] && j <= bank.length - (12 - k)) {
+                    digits[k] = digit;
+                    for (int m = k + 1; m < k + 11; m++) {
+                        digits[m] = 0;
+                    }
+                    break;
+                }
             }
         }
-        char number[3];
-        snprintf(number, 3, "%d%d", digits[0], digits[1]);
-        joltage += atoi(number);
-        printf("Bank %d joltage: %d%d\n", i, digits[0], digits[1]);
+        char joltage_str[13];
+        joltage_str[12] = '\0';
+        for (int j = 0; j < 12; j++) {
+            joltage_str[j] = '0' + digits[j];
+        }
+        joltage += atoll(joltage_str);
     }
     
     printf("Result: %lu\n", joltage);
