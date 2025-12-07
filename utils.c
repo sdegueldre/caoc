@@ -55,6 +55,35 @@ array str_split(string str, char delimiter) {
   return string_arr;
 }
 
+int str_find(string str, string needle, size_t from) {
+  for (size_t pos = from; pos < str.length - needle.length; pos++) {
+    int found = 1;
+    for (size_t offset = 0; offset < needle.length; offset++) {
+      if (str.chars[pos + offset] != needle.chars[offset]) {
+        found = 0;
+        break;
+      }
+    }
+    if (found) return pos;
+  }
+  return -1;
+}
+
+array str_split_str(string str, string delimiter) {
+  array string_arr = {.length = 0, .el_size = sizeof(string)};
+  size_t slice_start = 0;
+  while (1) {
+    int slice_end = str_find(str, delimiter, slice_start);
+    if (slice_end == -1) break;
+    string slice = str_slice(str, slice_start, slice_end);
+    arr_push(&string_arr, &slice);
+    slice_start = slice_end + delimiter.length;
+  }
+  string slice = str_slice(str, slice_start, str.length);
+  arr_push(&string_arr, &slice);
+  return string_arr;
+}
+
 char* string_to_cstr(string str) {
   char* cstr = malloc((str.length + 1) * sizeof(char));
   memcpy(cstr, str.chars, str.length);
