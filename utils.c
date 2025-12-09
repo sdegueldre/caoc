@@ -104,3 +104,19 @@ string file_to_string(char* fname) {
 
   return ret;
 }
+
+void print_str(void *str_ptr) {
+  string *str = (string *) str_ptr;
+  printf("%.*s\n", (int)str->length, str->chars);
+}
+
+void print_double(void *dbl_ptr) {
+  printf("%lf\n", *((double *)dbl_ptr));
+}
+
+void print_arr(array arr, void print_fn(void *)) {
+  for (int i = 0; i < arr.length; i++) {
+    void *item = &((char *)arr.els)[i * arr.el_size];
+    print_fn(item);
+  }
+}
